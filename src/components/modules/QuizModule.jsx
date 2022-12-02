@@ -5,7 +5,6 @@ const { TextArea } = Input;
 
 import emojiGif from "../../assets/img/emoji.webp";
 import { QUIZ_ATTRIBUTES } from "../../utilities/quiz";
-import FeedbackRepository from "../../repositories/FeedbackRepository";
 
 const inital_state = {
  fullName: "",
@@ -16,6 +15,23 @@ const inital_state = {
  traitement: "",
  advise: "",
 };
+
+const data=[{"question":"Après une relation sexuelle non protégée, je peux directement faire un test de dépistage du VIH pour savoir si j’ai été infecté.e ?",
+"arryResponse":["Vrai","Faux"]},
+{"question":"Une gynécologue peut-il·elle faire un dépistage des IST ?",
+"arryResponse":["Oui","Non"]},
+{"question":"Je peux acheter des autotests de dépistage du VIH en pharmacie.",
+"arryResponse":["Vrai","Faux"]},
+{"question":"Combien de temps dois-je attendre mon résultat avec un autotest ?",
+"arryResponse":["Quelques jours","Quelques minutes"]},
+{"question":"Quel liquide corporel est analysé lors d’un test de dépistage du VIH ?",
+"arryResponse":["Dans un centre de planning familial","A la pharmacie"]},
+{"question":"Une goutte de sang suffit pour faire…",
+"arryResponse":["Un dépistage du VIH par prise de sang","Un dépistage rapide du VIH(ou un autotest du VIH)"]},
+{"question":"Que dois-je faire pour avoir un résultat de test du VIH 100% fiable ?",
+"arryResponse":["Respecter le délai d’attente entre la prise de risque et le test","Passer au plus vite un test de dépistage du VIH après la prise de risque"]}
+]
+
 function QuizModule() {
  const [form] = Form.useForm();
  const [quiz, setQuiz] = useState(inital_state);
@@ -24,24 +40,7 @@ function QuizModule() {
  const [isMoved, setIsMoved] = useState(false);
 
  const onFinish = async () => {
-  let res = await FeedbackRepository.saveFeedback(quiz);
-
-  if (res.status == 200) {
-   notification.success({
-    message: `Ajout avis!`,
-    description: "Votre avis à été enregistré avec succées, merci pour votre temps!",
-    placement: "top",
-   });
-   form.resetFields();
-  } else {
-   notification.error({
-    message: `Erreur serveur!`,
-    description: " Un autre erreur s’est produite",
-    placement: "top",
-   });
-   setQuiz(inital_state);
-   form.resetFields();
-  }
+    setCurrentQuestion(setCurrentQuestion+1)
  };
 
  const handleMouseEnter = (e) => {
@@ -92,30 +91,39 @@ function QuizModule() {
   emojiClass = "d-flex justify-content-end ";
  }
 
+ const onChange = (e) => {
+    console.log(`checked = ${e.target.checked}`);
+  };
  return (
   <>
    <Form className="mt-4" form={form} name="basic" onSubmit={onFinish} autoComplete="on">
-    <label>Quelle à été votre experience avec SIDA?</label>
-    <Form.Item
-     name="experience"
-     className="w-100"
-     rules={[
-      {
-       required: true,
-       message: "Entrer votre réponse SVP!",
-      },
-      { pattern: /.*.{50}$/, message: "Minimum 50 caractére" },
-     ]}
-    >
-     <TextArea className="w-100" rows={4} name="experience" onChange={(e) => handleChange(e)} />
-    </Form.Item>
+    {data.map((element,i)=>(
+        i+1 == currentQuestion ? 
+        <div>
+        <label>{element.question}</label>
+        <Form.Item
+        name="experience"
+        className="w-100"
+        >
+           { element.arryResponse.map((response)=>(
+            
+                <Checkbox onChange={onChange}>{response}</Checkbox>
+            ))}
+            
+           
+        </Form.Item>
+        </div>
+        :null
+    ))}
+   
+  
+    
 
     <Form.Item>
      <div className={buttonClass}>
-      <Button type="primary" className="d-flex gap-2 align-items-center" htmlType="submit" onClick={() => onFinish()} onMouseEnter={(e) => handleMouseEnter(e)}>
+      <Button type="primary" className="d-flex gap-2 align-items-center" htmlType="submit" onClick={() => onFinish()}>
        {move && (
         <div className={emojiClass}>
-         <img src={emojiGif} className={emojiClass} height={30} width={30}></img>
         </div>
        )}
        <span>Suivant</span>

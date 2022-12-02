@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import QuizForm from "../modules/QuizModule";
 import FormImage from "../../assets/img/form.svg";
 import LogoSida from "../../assets/img/sida.png";
+import ScreenVideo from "../../assets/screen-capture.mp4";
 import { Player } from "video-react";
 function FormComponent() {
  const vidRef = useRef();
@@ -24,11 +25,10 @@ function FormComponent() {
     <div className=" col-xl-6 col-lg-6 col-md-12 col-xs-12">
      <div className="d-flex flex-column">
       <Player ref={vidRef}>
-       <source autoPlay src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" />
+       <source autoPlay src={ScreenVideo} />
       </Player>
       <p>
-       Lorem ipsum dolor sit, amet consectetur adipisicing elit. Iste incidunt, illo impedit itaque, quasi porro fuga ipsam distinctio alias animi eaque at esse doloribus pariatur beatae, modi id
-       labore dolor.
+       Video Sida
       </p>
      </div>
     </div>
